@@ -1,0 +1,31 @@
+{
+  "name": "react_ecomm_brad_code",
+  "version": "1.0.0",
+  "description": "Mern shopping cart APP",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node backend/server",
+    "server": "nodemon backend/server",
+    "client": "npm start --prefix frontendecomm",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IamJustKiran/ecommproject.git"
+  },
+  "author": "Kiran",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IamJustKiran/ecommproject/issues"
+  },
+  "homepage": "https://github.com/IamJustKiran/ecommproject#readme",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "concurrently": "^7.5.0",
+    "nodemon": "^2.0.20"
+  }
+}
