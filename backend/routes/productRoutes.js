@@ -1,5 +1,4 @@
 import express from "express";
-ks;
 const router = express.Router();
 import {
   getProducts,
