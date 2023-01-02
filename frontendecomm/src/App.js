@@ -9,6 +9,8 @@ import LoginScreen from "./screens/Login/LoginScreen";
 import RegisterScreen from "./screens/Register/Registerscreen";
 import ProfileScreen from "./screens/Profile/Profilescreen";
 import Shippingscreen from "./screens/Shipping/Shippingscreen";
+import PaymentScreen from "./screens/Payment/Paymentscreen";
+import PlaceOrderScreen from "./screens/PlaceOrder/Placeorderscreen";
 import { Route, Routes } from "react-router-dom";
 
 const App = () => {
@@ -20,6 +22,12 @@ const App = () => {
           <Routes>
             <Route exact path="/" element={<Homescreen />}></Route>
             <Route exact path="/shipping" element={<Shippingscreen />}></Route>
+            <Route
+              exact
+              path="/placeorder"
+              element={<PlaceOrderScreen />}
+            ></Route>
+            <Route exact path="/payment" element={<PaymentScreen />}></Route>
             <Route exact path="/login" element={<LoginScreen />}></Route>
             <Route exact path="/profile" element={<ProfileScreen />}></Route>
             <Route exact path="/register" element={<RegisterScreen />}></Route>
