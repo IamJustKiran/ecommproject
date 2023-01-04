@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Button, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
+import { Row, Col, ListGroup, Image, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
-import { getOrder } from "../../actions/orderAction";
+import { getOrder, payOrder } from "../../actions/orderAction";
+import { ORDER_PAY_RESET } from "../../constants/orderConstants";
+import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 
 const OrderScreen = () => {
   const { id } = useParams();
   const orderDetails = useSelector((state) => state.orderDetails);
   const { loading, order, error } = orderDetails;
+  const orderPay = useSelector((state) => state.orderPay);
+  const { loading: loadingPay, success: successPay } = orderPay;
   const dispatch = useDispatch();
-
+  const [{ isResolved, isPending, isRejected }] = usePayPalScriptReducer();
   //   Calculate prices
   const addDecimals = (num) => {
     return (Math.round(num * 100) / 100).toFixed(2);
@@ -24,10 +28,27 @@ const OrderScreen = () => {
   }
 
   useEffect(() => {
-    if (!order || order._id !== id) {
+    if (!order || order._id !== id || successPay) {
+      dispatch({ type: ORDER_PAY_RESET });
       dispatch(getOrder(id));
-    } // eslint-disable-next-line
-  }, [dispatch, id, order]);
+    }
+  }, [dispatch, id, successPay, order]);
+
+  const createOrder = (data, actions) => {
+    return actions.order.create({
+      purchase_units: [
+        {
+          amount: { value: order.totalPrice },
+        },
+      ],
+    });
+  };
+
+  const successPaymentHandler = (data, actions) => {
+    return actions.order.capture().then((details) => {
+      dispatch(payOrder(id, details));
+    });
+  };
 
   return loading ? (
     <Loader />
@@ -145,6 +166,21 @@ const OrderScreen = () => {
                 </ListGroup.Item>
               )}
             </ListGroup>
+            {!order.isPaid && (
+              <ListGroup.Item>
+                {loadingPay && <Loader />}
+                {isPending && <Loader />}
+                {isRejected && (
+                  <Message variant="danger">SDK Load Error</Message>
+                )}
+                {isResolved && (
+                  <PayPalButtons
+                    createOrder={createOrder}
+                    onApprove={successPaymentHandler}
+                  />
+                )}
+              </ListGroup.Item>
+            )}
           </Card>
         </Col>
       </Row>
