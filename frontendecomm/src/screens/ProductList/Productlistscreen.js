@@ -4,10 +4,18 @@ import { Table, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
-import { listProducts } from "../../actions/productActions";
+import { useNavigate } from "react-router-dom";
+import { listProducts, deleteProduct } from "../../actions/productActions";
 
-const ProductListScreen = ({ history, match }) => {
+const ProductListScreen = () => {
+  const productDelete = useSelector((state) => state.productDelete);
+  const {
+    loading: loadingDelete,
+    error: errorDelete,
+    success: successDelete,
+  } = productDelete;
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const productList = useSelector((state) => state.productList);
   const { loading, error, products } = productList;
@@ -19,13 +27,13 @@ const ProductListScreen = ({ history, match }) => {
     if (userInfo && userInfo.isAdmin) {
       dispatch(listProducts());
     } else {
-      history.push("/login");
+      navigate("/login");
     }
-  }, [dispatch, history, userInfo]);
+  }, [dispatch, navigate, userInfo, successDelete]);
 
   const deleteHandler = (id) => {
     if (window.confirm("Are you sure")) {
-      // DELETE PRODUCTS
+      dispatch(deleteProduct(id));
     }
   };
 
