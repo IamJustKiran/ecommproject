@@ -16,6 +16,7 @@ import UserListScreen from "./screens/UserList/UserListScreen";
 import OrderScreen from "./screens/Order/OrderScreen";
 import UserEditScreen from "./screens/UserEdit/UserEditScreen";
 import ProductListScreen from "./screens/ProductList/Productlistscreen";
+import ProductEditScreen from "./screens/ProductEdit/Producteditscreen";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { Route, Routes } from "react-router-dom";
 
@@ -72,6 +73,10 @@ const App = () => {
                   element={<RegisterScreen />}
                 ></Route>
                 <Route path="/product/:id" element={<Productscreen />}></Route>
+                <Route
+                  path="/admin/product/:id/edit"
+                  element={<ProductEditScreen />}
+                ></Route>
                 <Route path="/cart/:id" element={<Cartscreen />}></Route>
                 <Route path="/cart" element={<Cartscreen />}></Route>
                 <Route
