@@ -4,32 +4,51 @@ import { useDispatch, useSelector } from "react-redux";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 import FormContainer from "../../components/Container/FormContainer";
-import { getProductDetails } from "../../actions/productActions";
+import { getProductDetails, updateProduct } from "../../actions/productActions";
 import { useForm } from "react-hook-form";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import { PRODUCT_UPDATE_RESET } from "../../constants/productConstants";
 
 const ProductEditScreen = () => {
   const { id: productId } = useParams();
-  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const productDetail = useSelector((state) => state.productDetail);
   const { loading, error, product } = productDetail;
+  const productUpdate = useSelector((state) => state.productUpdate);
+  const {
+    loading: loadingUpdate,
+    error: errorUpdate,
+    success: successUpdate,
+  } = productUpdate;
   const { handleSubmit, register, reset } = useForm({
     defaultValues: product,
   });
 
   useEffect(() => {
+    if (successUpdate) {
+      dispatch({ type: PRODUCT_UPDATE_RESET });
+      navigate("/admin/productlist");
+    }
     if (!product?.name || product?._id !== productId) {
       dispatch(getProductDetails(productId));
     } else {
       reset(product);
     }
-  }, [dispatch, productId, product]);
+  }, [dispatch, productId, product, successUpdate, navigate]);
 
   const submitHandler = (e) => {
-    e.preventDefault();
-    // UPDATE PRODUCT
+    updateProduct({
+      _id: productId,
+      name: e?.name,
+      price: e?.price,
+      image: e?.image,
+      brand: e?.brand,
+      category: e?.category,
+      description: e?.description,
+      countInStock: e?.countInStock,
+    });
   };
 
   return (
@@ -39,6 +58,8 @@ const ProductEditScreen = () => {
       </Link>
       <FormContainer>
         <h1>Edit Product</h1>
+        {loadingUpdate && <Loader />}
+        {errorUpdate && <Message variant="danger">{errorUpdate}</Message>}
         {loading ? (
           <Loader />
         ) : error ? (
