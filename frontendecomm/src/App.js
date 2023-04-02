@@ -41,7 +41,6 @@ const App = () => {
           <main className="py-3">
             <Container>
               <Routes>
-                <Route exact path="/" element={<Homescreen />}></Route>
                 <Route
                   exact
                   path="/shipping"
@@ -96,6 +95,8 @@ const App = () => {
                   path="/admin/orderlist"
                   element={<OrderListScreen />}
                 ></Route>
+                <Route path="/search/:keyword" element={<Homescreen />}></Route>
+                <Route exact path="/" element={<Homescreen />}></Route>
               </Routes>
             </Container>
           </main>

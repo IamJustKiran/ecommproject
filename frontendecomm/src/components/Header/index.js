@@ -1,13 +1,16 @@
 import React from "react";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../actions/userActions";
+import SearchBox from "../SearchBox";
 
 const Header = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const logoutHandler = () => {
     dispatch(logout());
   };
@@ -21,6 +24,7 @@ const Header = () => {
 
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
+            <SearchBox navigate={navigate} />
             <Nav className="ms-auto">
               <LinkContainer to="/cart">
                 <Nav.Link>
